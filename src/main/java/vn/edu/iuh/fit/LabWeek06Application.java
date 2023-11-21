@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import vn.edu.iuh.fit.backend.models.Post;
+import vn.edu.iuh.fit.backend.models.PostComment;
 import vn.edu.iuh.fit.backend.models.User;
 import vn.edu.iuh.fit.backend.repositories.UserRepository;
 import vn.edu.iuh.fit.backend.services.UserServices;
@@ -26,12 +27,15 @@ public class LabWeek06Application {
     private UserServices userServices;
     @Autowired
     private vn.edu.iuh.fit.backend.repositories.PostRepository postRepository;
+    @Autowired
+    private vn.edu.iuh.fit.backend.repositories.PostCommentRepository postCommentRepository;
 
     @Bean
     CommandLineRunner initData() {
         return args -> {
             Random rnd = new Random();
             List<User> users = userRepository.findAll();
+            List<Post> posts = postRepository.findAll();
             for (int i = 1; i < 100; i++) {
 //                User user = new User(
 //                        Long.valueOf(i),
@@ -62,6 +66,21 @@ public class LabWeek06Application {
 //
 //                // Lưu bài đăng vào cơ sở dữ liệu
 //                postRepository.save(post);
+
+//                User randomUser = users.get(rnd.nextInt(users.size()));
+//                Post randomPost = posts.get(rnd.nextInt(posts.size()));
+//                PostComment comment = new PostComment();
+//                comment.setPost(randomPost);
+//                comment.setParent(null);
+//                comment.setTitle("Comment " + i);
+//                comment.setUser(randomUser);
+//                comment.setPublished(rnd.nextBoolean());
+//                comment.setCreatedAt(Instant.now());
+//                comment.setPublishedAt(Instant.now());
+//                comment.setContent("Comment Content" + i);
+//
+//                // Lưu comment vào cơ sở dữ liệu
+//                postCommentRepository.save(comment);
             }
         };
     };

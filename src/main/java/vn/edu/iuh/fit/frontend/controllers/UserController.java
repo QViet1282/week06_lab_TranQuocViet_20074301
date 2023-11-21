@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.frontend.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,8 +53,8 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public String login (@RequestParam("emailorphone") String emailorphone,
-                       @RequestParam("password") String password){
+    public String login (HttpSession session, @RequestParam("emailorphone") String emailorphone,
+                         @RequestParam("password") String password){
         List<User> users = userRepository.findAll();
         if (emailorphone == null || password == null){
             System.out.println("Login fail");
@@ -64,6 +65,7 @@ public class UserController {
                 if (user.getPasswordHash().equals(userServices.encrypt(password))){
                     user.setLastLogin(Instant.now());
                     userRepository.save(user);
+                    session.setAttribute("user", user);
                     System.out.println("Login success");
                     return "redirect:/users/home";
                 }
@@ -83,14 +85,52 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String home(@RequestParam(name = "page", defaultValue = "1") int page,
+    public String home(HttpSession session,
+                       @RequestParam(name = "page", defaultValue = "1") int page,
                        @RequestParam(name = "size", defaultValue = "10") int size,
                        Model model) {
         PageRequest pageRequest = PageRequest.of(page-1, size);
-        Page<Post> postPage = postRepository.findAll(pageRequest);
+        Page<Post> postPage = postRepository.findAllByPublishedIsTrue(pageRequest);
         model.addAttribute("posts", postPage);
         model.addAttribute("paginatedList", postPage);
-
+        model.addAttribute("user",(User) session.getAttribute("user"));
         return "users/home";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("user");
+        return "redirect:/users/login-form";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String profile(HttpSession session,@PathVariable("id") String id, Model model,
+                          @RequestParam(name = "page", defaultValue = "1") int page,
+                          @RequestParam(name = "size", defaultValue = "10") int size){
+        model.addAttribute("userprofile", userRepository.findById(Long.parseLong(id)).get());
+        User userLogin = (User) session.getAttribute("user");
+        model.addAttribute("loggedInUserId", userLogin.getId());
+        PageRequest pageRequest = PageRequest.of(page-1, size);
+        Page<Post> postPage = postRepository.findAllByAuthorId(pageRequest, Long.parseLong(id));
+        model.addAttribute("posts", postPage);
+        model.addAttribute("paginatedList", postPage);
+        return "users/profile";
+    }
+
+    @PostMapping("/updateProfile")
+    public String updateprofile(HttpSession session, Model model,
+                                @RequestParam("mobile") String mobile,
+                                @RequestParam("email") String email,
+                                @RequestParam("intro") String intro,
+                                @RequestParam("profile") String profile){
+        User user = (User) session.getAttribute("user");
+        user.setMobile(mobile);
+        user.setEmail(email);
+        user.setIntro(intro);
+        user.setProfile(profile);
+        userRepository.save(user);
+        session.setAttribute("user", user);
+        model.addAttribute("user", user);
+        return "redirect:/users/profile/"+user.getId();
     }
 }

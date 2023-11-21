@@ -55,7 +55,7 @@ public class Post {
     @OneToMany(mappedBy = "parent")
     private Set<Post> posts = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new LinkedHashSet<>();
 
     public Post() {

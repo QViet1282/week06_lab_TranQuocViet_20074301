@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="d-flex justify-content-between" style="background-color: bisque">
+    <a th:href="@{/users/home}" class="btn btn-primary">Home</a>
+    <a th:href="@{/posts/createPost}" class="btn btn-primary">Create Post</a>
+    <a th:href="@{/users/profile/{id}(id=${loggedInUserId})}" class="btn btn-primary">Profile</a>
+    <a th:href="@{/users/logout}" class="btn btn-primary">Logout</a>
+</div>
+<div class="container mt-5">
+    <!-- User Information -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>User Information</h5>
+        </div>
+        <div class="card-body">
+            <!-- Check if the logged-in user matches the profile user -->
+            <!-- Update user information form -->
+            <form th:action="@{/users/updateProfile}" method="post">
+                <!-- Text fields for editable user information -->
+
+
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" th:value="${userprofile.firstName}"
+                       class="form-control mb-2" readonly>
+
+                <label for="middleName">Last Name:</label>
+                <input type="text" id="middleName" name="middleName" th:value="${userprofile.middleName}"
+                       class="form-control mb-2" readonly>
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" th:value="${userprofile.lastName}"
+                       class="form-control mb-2" readonly>
+
+
+
+                <label for="intro">Intro:</label>
+                <input type="text" id="intro" name="intro" th:value="${userprofile.intro}" class="form-control mb-2">
+
+                <label for="profile">Profile:</label>
+                <input type="text" id="profile" name="profile" th:value="${userprofile.profile}" class="form-control mb-2">
+
+
+                <div th:if="${userprofile.id == loggedInUserId}">
+
+                    <label for="mobile">Phone:</label>
+                    <input type="text" id="mobile" name="mobile" th:value="${userprofile.mobile}" class="form-control mb-2">
+
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" th:value="${userprofile.email}" class="form-control mb-2">
+
+
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+    <!-- User Posts -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>User Posts</h5>
+        </div>
+        <div class="card-body">
+            <div th:each="post : ${posts}">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 th:text="${post.author.firstName + ' ' + post.author.lastName}"></h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong><span th:text="${post.title}"></span></strong></p>
+                        <p><span th:text="${post.summary}"></span></p>
+                        <a th:href="@{/posts/{id}/detail(id=${post.id})}" class="btn btn-primary">Detail</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center ">
+                <div th:replace="fragments/pagination :: pagination (${paginatedList})"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
