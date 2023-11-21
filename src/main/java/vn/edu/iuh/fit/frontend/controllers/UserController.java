@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -89,7 +90,7 @@ public class UserController {
                        @RequestParam(name = "page", defaultValue = "1") int page,
                        @RequestParam(name = "size", defaultValue = "10") int size,
                        Model model) {
-        PageRequest pageRequest = PageRequest.of(page-1, size);
+        PageRequest pageRequest = PageRequest.of(page-1, size, Sort.by("createdAt").descending());
         Page<Post> postPage = postRepository.findAllByPublishedIsTrue(pageRequest);
         model.addAttribute("posts", postPage);
         model.addAttribute("paginatedList", postPage);
@@ -110,7 +111,7 @@ public class UserController {
         model.addAttribute("userprofile", userRepository.findById(Long.parseLong(id)).get());
         User userLogin = (User) session.getAttribute("user");
         model.addAttribute("loggedInUserId", userLogin.getId());
-        PageRequest pageRequest = PageRequest.of(page-1, size);
+        PageRequest pageRequest = PageRequest.of(page-1, size, Sort.by("createdAt").descending());
         Page<Post> postPage = postRepository.findAllByAuthorId(pageRequest, Long.parseLong(id));
         model.addAttribute("posts", postPage);
         model.addAttribute("paginatedList", postPage);

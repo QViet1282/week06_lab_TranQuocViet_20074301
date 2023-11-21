@@ -75,4 +75,21 @@ public class PostController {
         return "redirect:/users/profile/"+user.getId();
     }
 
+
+    @GetMapping("/createPost")
+    public String createPost(HttpSession session, Model model){
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        return "posts/create-post";
+    }
+
+    @PostMapping("/createPost")
+    public String createPost(HttpSession session, @ModelAttribute Post post){
+        User user = (User) session.getAttribute("user");
+        post.setAuthor(user);
+        post.setCreatedAt(Instant.now());
+        post.setPublishedAt(Instant.now());
+        postRepository.save(post);
+        return "redirect:/users/profile/"+user.getId();
+    }
 }
