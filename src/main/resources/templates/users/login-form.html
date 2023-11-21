@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100">
+<div class="container">
+    <h2 class="text-center">Login Page</h2>
+    <form th:action="@{'/users/login'}" method="post" class="p-4 border rounded shadow">
+        <div class="mb-3">
+            <label for="emailorphone" class="form-label">Email hoặc Phone:</label>
+            <input type="text" id="emailorphone" name="emailorphone" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit"  class="btn btn-primary">Login</button>
+    </form>
+    <p class="text-center mt-3">Don't have an account? <a th:href="@{'/users/register-form'}">Register here</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

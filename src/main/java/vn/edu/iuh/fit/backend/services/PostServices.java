@@ -1,5 +1,8 @@
 package vn.edu.iuh.fit.backend.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import vn.edu.iuh.fit.backend.models.Post;
 import vn.edu.iuh.fit.backend.repositories.PostRepository;
 
 public class PostServices {
@@ -8,4 +11,6 @@ public class PostServices {
     public PostServices(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
+
+
 }
