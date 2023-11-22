@@ -63,7 +63,12 @@ public class PostController {
     @GetMapping("/publishPost/{id}")
     public String publishPost(@PathVariable("id") String id){
         Post post = postRepository.findById(Long.parseLong(id)).get();
+
         post.setPublished(!post.getPublished());
+        if (post.getPublished() == true)
+            post.setPublishedAt(Instant.now());
+        else
+            post.setPublishedAt(null);
         postRepository.save(post);
         return "redirect:/posts/"+id+"/detail";
     }
@@ -89,6 +94,31 @@ public class PostController {
         post.setAuthor(user);
         post.setCreatedAt(Instant.now());
         post.setPublishedAt(Instant.now());
+        postRepository.save(post);
+        return "redirect:/users/profile/"+user.getId();
+    }
+
+    @GetMapping("/updatePost/{id}")
+    public String updatePost(HttpSession session, @PathVariable("id") String id, Model model){
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        model.addAttribute("post", postRepository.findById(Long.parseLong(id)).get());
+        return "posts/update-post";
+    }
+
+    @PostMapping("/updatePost/{id}")
+    public String updatePost(HttpSession session, @PathVariable("id") String id,
+                             @RequestParam("title") String title,
+                             @RequestParam("content") String content,
+                             @RequestParam("summary") String summary,
+                             @RequestParam("metaTitle") String metaTitle){
+        User user = (User) session.getAttribute("user");
+        Post post = postRepository.findById(Long.parseLong(id)).get();
+        post.setUpdatedAt(Instant.now());
+        post.setTitle(title);
+        post.setContent(content);
+        post.setSummary(summary);
+        post.setMetaTitle(metaTitle);
         postRepository.save(post);
         return "redirect:/users/profile/"+user.getId();
     }

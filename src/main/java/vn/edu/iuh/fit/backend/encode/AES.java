@@ -3,6 +3,9 @@ package vn.edu.iuh.fit.backend.encode;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+/**
+ * Created by tehcpu on 11/12/17.
+ */
 public class AES {
     private String plainText;
     private final String keyValue = "1234567890123456";
@@ -442,6 +445,11 @@ public class AES {
         }
         return out.toByteArray();
     }
+
+
+    // Ho tro su dung
+
+
     public static String bytesToHex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
         for (byte b : bytes) {
@@ -449,7 +457,6 @@ public class AES {
         }
         return result.toString();
     }
-
 
     public static byte[] hexStringToByteArray(String hex) {
         int l = hex.length();

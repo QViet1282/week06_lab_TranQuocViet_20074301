@@ -23,6 +23,7 @@
                         th:text="${post.author.firstName + ' ' + post.author.lastName}"></span></p>
                 <a th:if="${post.author.id == loggedInUserId}" th:href="@{/posts/deletePost/{id}(id=${post.id})}"
                    class="btn btn-danger">Delete</a>
+                <a th:if="${post.author.id == loggedInUserId}" th:href="@{/posts/updatePost/{id}(id=${post.id})}" class="btn btn-primary">Update</a>
                 <a th:if="${post.author.id == loggedInUserId}" th:href="@{/posts/publishPost/{id}(id=${post.id})}"
                    class="btn btn-danger"><h6 th:text="${'Publish:'+post.published}"></h6></a>
             </div>
